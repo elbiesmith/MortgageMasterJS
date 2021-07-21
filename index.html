@@ -165,7 +165,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalToggleLabel2">New Loan</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button"label="btnClose2" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -378,13 +378,16 @@
         document.getElementById('btnCalculate').addEventListener('click', calculate);
         document.getElementById('changeUser').addEventListener('click', displayUserModal);
         document.getElementById('choose1').addEventListener('click', function() {
-            setUserData(shortTermLoan);
+            users.push(shortTermLoan);
+            setUserData(users);
         });
         document.getElementById('choose2').addEventListener('click', function() {
-            setUserData(userTermLoan);
+            users.push(userTermLoan);
+            setUserData(users);
         });
-        document.getElementById('choose1').addEventListener('click', function() {
-            setUserData(longTermLoan);
+        document.getElementById('choose3').addEventListener('click', function() {
+            users.push(longTermLoan);
+            setUserData(users);
         });
     </script>
 </body>

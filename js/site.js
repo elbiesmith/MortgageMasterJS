@@ -1060,6 +1060,7 @@ function calculate() {
 function setUserData(data) {
     // get user object from type of loan
     // add user object to local storage
+    localStorage.setItem('loanArray', JSON.stringify(data))
 
     // update the screen
 
@@ -1103,10 +1104,13 @@ function generateAmSchedule(loan) {
     let interest = 0;
 
     let monthlyPayment = calcMonthlyPayment(loan.currentBalance, loan.rate, loan.term);
-
-    for (let i = 1; i <= users[userNumber].term; i++) {
+    totalCost = 0;
+    totalInterest = 0
+    for (let i = 1; i <= loan.term; i++) {
         interest = calcInterest(loan.currentBalance, loan.rate);
         loan.currentBalance -= monthlyPayment - interest;
+        totalInterest += interest;
+        totalCost += monthlyPayment;
         loan.totalInterest += interest;
         amSchedule.push({
             payment: formatNumber(monthlyPayment),
@@ -1125,47 +1129,55 @@ function generateAmSchedule(loan) {
 function buildLongTerm(first, last, amount, term, downPayment, rate) {
     longTermLoan.firstName = first;
     longTermLoan.lastName = last;
-    longTermLoan.userNumber = userNumber;
+    longTermLoan.userNumber = userNumber + 1;
     longTermLoan.moneyDown = downPayment;
     longTermLoan.paymentsMade = 0;
     longTermLoan.principal = amount - longTermLoan.moneyDown;
-    longTermLoan.currentBalance = amount;
     longTermLoan.term = 84;
     longTermLoan.rate = 3.5;
     longTermLoan.monthlyPayment = calcMonthlyPayment(longTermLoan.principal, longTermLoan.rate, longTermLoan.term);
-    longTermLoan.amSchedule = {};
-    longTermLoan.totalInterest = totalInterest;
+    longTermLoan.amSchedule = generateAmSchedule(longTermLoan);
+    longTermLoan.currentBalance = longTermLoan.principal - (longTermLoan.monthlyPayment * longTermLoan.paymentsMade);
     longTermLoan.totalCost = totalCost;
+    longTermLoan.totalInterest = totalInterest;
+
+    // longTermLoan.totalInterest = totalInterest;
+    // longTermLoan.totalCost = totalCost;
 }
 
 function buildUserTerm(first, last, amount, term, downPayment, rate) {
     userTermLoan.firstName = first;
     userTermLoan.lastName = last;
-    userTermLoan.userNumber = userNumber;
+    userTermLoan.userNumber = userNumber + 1;
     userTermLoan.moneyDown = downPayment;
     userTermLoan.paymentsMade = 0;
-    userTermLoan.principal = amount - longTermLoan.moneyDown;
-    userTermLoan.currentBalance = amount;
+    userTermLoan.principal = amount - userTermLoan.moneyDown;
     userTermLoan.term = term;
     userTermLoan.rate = rate;
     userTermLoan.monthlyPayment = calcMonthlyPayment(userTermLoan.principal, userTermLoan.rate, userTermLoan.term);
-    userTermLoan.amSchedule = {};
-    userTermLoan.totalInterest = totalInterest;
+    userTermLoan.amSchedule = generateAmSchedule(userTermLoan);
+    userTermLoan.currentBalance = userTermLoan.principal - (userTermLoan.monthlyPayment * userTermLoan.paymentsMade);
     userTermLoan.totalCost = totalCost;
+    userTermLoan.totalInterest = totalInterest;
+    // userTermLoan.totalInterest = totalInterest;
+    // userTermLoan.totalCost = totalCost;
 }
 
 function buildShortTerm(first, last, amount, term, downPayment, rate) {
     shortTermLoan.firstName = first;
     shortTermLoan.lastName = last;
-    shortTermLoan.userNumber = userNumber;
+    shortTermLoan.userNumber = userNumber + 1;
     shortTermLoan.moneyDown = downPayment;
     shortTermLoan.paymentsMade = 0;
-    shortTermLoan.principal = amount - longTermLoan.moneyDown;
-    shortTermLoan.currentBalance = amount;
+    shortTermLoan.principal = amount - shortTermLoan.moneyDown;
     shortTermLoan.term = 24;
     shortTermLoan.rate = 10.3;
     shortTermLoan.monthlyPayment = calcMonthlyPayment(shortTermLoan.principal, shortTermLoan.rate, shortTermLoan.term);
-    shortTermLoan.amSchedule = {};
-    shortTermLoan.totalInterest = totalInterest;
+    shortTermLoan.amSchedule = generateAmSchedule(shortTermLoan);
+    shortTermLoan.currentBalance = shortTermLoan.principal - (shortTermLoan.monthlyPayment * shortTermLoan.paymentsMade);
     shortTermLoan.totalCost = totalCost;
+    shortTermLoan.totalInterest = totalInterest;
+
+    // shortTermLoan.totalInterest = totalInterest;
+    // shortTermLoan.totalCost = totalCost;
 }
