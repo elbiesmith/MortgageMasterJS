@@ -872,11 +872,13 @@ let usersDefault = [{
 }];
 let users = JSON.parse(localStorage.getItem('loanArray')) || usersDefault;
 let userNumber = users.length;
+let totalInterest = 0;
+let totalCost = 0;
 
 let shortTermLoan = {
     firstName: "",
     lastName: "",
-    userNumber: users.length + 1,
+    userNumber: users.length,
     paymentsMade: 0,
     principal: 15000,
     currentBalance: 0,
@@ -891,7 +893,7 @@ let shortTermLoan = {
 let userTermLoan = {
     firstName: "",
     lastName: "",
-    userNumber: users.length + 1,
+    userNumber: users.length,
     paymentsMade: 0,
     principal: 15000,
     currentBalance: 0,
@@ -906,7 +908,7 @@ let userTermLoan = {
 let longTermLoan = {
     firstName: "",
     lastName: "",
-    userNumber: users.length + 1,
+    userNumber: users.length,
     paymentsMade: 0,
     principal: 15000,
     currentBalance: 0,
@@ -1012,7 +1014,7 @@ function calculate() {
     let loanAmount = validate(parseInt(document.getElementById('loanAmount').value));
     let loanTerm = validate(parseInt(document.getElementById('loanTerm').value));
     let downPayment = validate(parseInt(document.getElementById('downPaymentForm').value));
-    let loanRate = validate(parseFloat(document.getElementById('loanAmount').value));
+    let loanRate = validate(parseFloat(document.getElementById('loanRate').value));
 
     // build longTermLoan, shortTermLoan, userTermLoan
     buildLongTerm(firstName, lastName, loanAmount, loanTerm, downPayment, loanRate);
@@ -1020,11 +1022,40 @@ function calculate() {
     buildUserTerm(firstName, lastName, loanAmount, loanTerm, downPayment, loanRate);
 
     // update options form    
+    // get handle on page
+    let shortAmountField = document.getElementById('shortAmount');
+    let shortRateField = document.getElementById('shortRate');
+    let shortTermField = document.getElementById('shortTerm');
+    let shortCostField = document.getElementById('shortCost');
+
+    let userAmountField = document.getElementById('userAmount');
+    let userRateField = document.getElementById('userRate');
+    let userTermField = document.getElementById('userTerm');
+    let userCostField = document.getElementById('userCost');
+    
+    let longAmountField = document.getElementById('longAmount');
+    let longRateField = document.getElementById('longRate');
+    let longTermField = document.getElementById('longTerm');
+    let longCostField = document.getElementById('longCost');
+
+    shortAmountField.innerHTML = formatNumber(shortTermLoan.principal);
+    shortRateField.innerHTML = `${shortTermLoan.rate}%`;
+    shortTermField.innerHTML = `${shortTermLoan.term} months`;
+    shortCostField.innerHTML = formatNumber(shortTermLoan.totalCost);
+
+    userAmountField.innerHTML = formatNumber(userTermLoan.principal);
+    userRateField.innerHTML = `${userTermLoan.rate}%`;
+    userTermField.innerHTML = `${userTermLoan.term} months`;
+    userCostField.innerHTML = formatNumber(userTermLoan.totalCost);
+
+    longAmountField.innerHTML = formatNumber(longTermLoan.principal);
+    longRateField.innerHTML = `${longTermLoan.rate}%`;
+    longTermField.innerHTML = `${longTermLoan.term} months`;
+    longCostField.innerHTML = formatNumber(longTermLoan.totalCost);
 }
 
 function setUserData(data) {
     // get user object from type of loan
-
     // add user object to local storage
 
     // update the screen
@@ -1051,7 +1082,7 @@ function payOffLoan() {
     // remove record
     // update userNumbers
     // save to localStorage
-    
+
 }
 
 function generateAmSchedule() {
@@ -1081,25 +1112,46 @@ function buildLongTerm(first, last, amount, term, downPayment, rate) {
     longTermLoan.firstName = first;
     longTermLoan.lastName = last;
     longTermLoan.userNumber = userNumber;
-    longTermLoan.paymentsMade = 0;
-    longTermLoan.principal = amount;
-    longTermLoan.currentBalance = amount;
-    longTermLoan.term = term;
-    longTermLoan.rate = rate;
     longTermLoan.moneyDown = downPayment;
-    longTermLoan.monthlyPayment = calcMonthlyPayment()
-    longTermLoan
-    longTermLoan
-    longTermLoan
-    longTermLoan.amSchedule = generateAmSchedule();
-
-    //update userNumber
+    longTermLoan.paymentsMade = 0;
+    longTermLoan.principal = amount - longTermLoan.moneyDown;
+    longTermLoan.currentBalance = amount;
+    longTermLoan.term = 84;
+    longTermLoan.rate = 3.5;
+    longTermLoan.monthlyPayment = calcMonthlyPayment(longTermLoan.principal, longTermLoan.rate, longTermLoan.term);
+    longTermLoan.amSchedule = {};
+    longTermLoan.totalInterest = totalInterest;
+    longTermLoan.totalCost = totalCost;
 }
 
-function buildUserTerm(first, last, amount, term, payment, rate) {
-    
+function buildUserTerm(first, last, amount, term, downPayment, rate) {
+    userTermLoan.firstName = first;
+    userTermLoan.lastName = last;
+    userTermLoan.userNumber = userNumber;
+    userTermLoan.moneyDown = downPayment;
+    userTermLoan.paymentsMade = 0;
+    userTermLoan.principal = amount - longTermLoan.moneyDown;
+    userTermLoan.currentBalance = amount;
+    userTermLoan.term = term;
+    userTermLoan.rate = rate;
+    userTermLoan.monthlyPayment = calcMonthlyPayment(userTermLoan.principal, userTermLoan.rate, userTermLoan.term);
+    userTermLoan.amSchedule = {};
+    userTermLoan.totalInterest = totalInterest;
+    userTermLoan.totalCost = totalCost;
 }
 
-function buildShortTerm(first, last, amount, term, payment, rate) {
-    
+function buildShortTerm(first, last, amount, term, downPayment, rate) {
+    shortTermLoan.firstName = first;
+    shortTermLoan.lastName = last;
+    shortTermLoan.userNumber = userNumber;
+    shortTermLoan.moneyDown = downPayment;
+    shortTermLoan.paymentsMade = 0;
+    shortTermLoan.principal = amount - longTermLoan.moneyDown;
+    shortTermLoan.currentBalance = amount;
+    shortTermLoan.term = 24;
+    shortTermLoan.rate = 10.3;
+    shortTermLoan.monthlyPayment = calcMonthlyPayment(shortTermLoan.principal, shortTermLoan.rate, shortTermLoan.term);
+    shortTermLoan.amSchedule = {};
+    shortTermLoan.totalInterest = totalInterest;
+    shortTermLoan.totalCost = totalCost;
 }
