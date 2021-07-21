@@ -369,12 +369,13 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
         integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous">
     </script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="/js/site.js"></script>
     <script>
         window.onload = displayUserModal;
         document.getElementById('btnShow').addEventListener('click', displayAmSchedule);
         document.getElementById('changeUser').addEventListener('click', displayUserModal);
-        document.getElementById('btnCalculate').addEventListener('click', displayOptions);
+        document.getElementById('btnCalculate').addEventListener('click', calculate);
         document.getElementById('changeUser').addEventListener('click', displayUserModal);
         document.getElementById('choose1').addEventListener('click', function() {
             setUserData(shortTermLoan);
