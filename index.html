@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>PageTitle</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h1>Mortgage Tracker</h1>
+            </div>
+            <div class="col">
+                <h5 class="float-end"><a id="changeUser" >Change User</a></h5>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                User Stats:<br>
+                Name: <span><strong id="userName">John Doe</strong></span><br>
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <h5 class="card-title">Loan Information</h5>
+                        <h6 class="card-subtitle mb-2 text-muted"></h6>
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>Payments Made</td>
+                                    <td></td>
+                                    <td><strong id="paymentsMade">0</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Current Balance</td>
+                                    <td></td>
+                                    <td><strong id="currentBalance">$0.00</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Total Principal</td>
+                                    <td></td>
+                                    <td><strong id="totalPrincipal">$0.00</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Initial Term Length</td>
+                                    <td></td>
+                                    <td><strong id="termLength">0</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Interest Rate</td>
+                                    <td>&emsp;&emsp;</td>
+                                    <td><strong id="interestRate">0</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Down Payment</td>
+                                    <td>&emsp;&emsp;</td>
+                                    <td><strong id="downPayment">$0.00</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col"></div>
+        </div>
+        <div class="row">
+            <div class="col text-center">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Principal</h5>
+                        <h6 class="card-subtitle mb-2 text-muted"></h6>
+                        <p><strong id="totalPrincipalCard">$0.00</strong></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col text-center">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Interest</h5>
+                        <h6 class="card-subtitle mb-2 text-muted"></h6>
+                        <p><strong id="totalInterestCard">$0.00</strong></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col text-center">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Cost</h5>
+                        <h6 class="card-subtitle mb-2 text-muted"></h6>
+                        <p><strong id="totalCostCard">$0.00</strong></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col text-center">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">Amount Due</h5>
+                        <h6 class="card-subtitle mb-2 text-muted"></h6>
+                        <p><strong id="paymentCard">$0.00</strong></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="col mt-2">
+                <div class="row">
+                    <div class="col">
+                        <h4><a id="btnShow" class="btn btn-outline-primary">Build Amoritization Schedule</a></h4>
+                    </div>
+                    <div class="col">
+                    </div>
+                </div>
+                <table class="table table-striped">
+                    <thead class="table-dark">
+                        <th>Month</th>
+                        <th>Payment</th>
+                        <th>Principal</th>
+                        <th>Interest</th>
+                        <th>Total Interest</th>
+                        <th>Balance</th>
+                    </thead>
+                    <tbody id="resultTable">
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- userModal -->
+    <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel"
+        tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalToggleLabel">Choose User</h5>
+                    <button type="button" class="btn-close" id='btnClose1' data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ol id='userList'>
+
+                    </ol>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal"
+                        data-bs-dismiss="modal">Enter New Loan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2"
+        tabindex="-1">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalToggleLabel2">New Loan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-3">
+                            <form class="me-0 pe-0" id="loanForm">
+                                <div class="row mb-2">
+                                    <div class="row">
+                                        <div class="col">
+                                            <label for="firstNameForm" class="form-label">First Name</label>
+                                            <input type="text" class="form-control" id="firstNameForm">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="row">
+                                        <div class="col">
+                                            <label for="lastNameForm" class="form-label">Last Name</label>
+                                            <input type="text" class="form-control" id="lastNameForm">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="row">
+                                        <div class="col">
+                                            <label for="loanAmount" class="form-label">Loan Amount</label>
+                                            <input type="number" class="form-control" id="loanAmount">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="row">
+                                        <div class="col">
+                                            <label for="loanTerm" class="form-label">Loan Term in Months</label>
+
+                                            <input type="number" class="form-control" id="loanTerm">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="row">
+                                        <div class="form-group">
+
+                                            <label for="downPaymentForm" class="form-label">Down Payment</label>
+                                            <input type="number" step="0.01" id="downPaymentForm" class="form-control"
+                                                aria-label="Text input with dropdown button">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-outline-secondary dropdown-toggle" type="button"
+                                                    data-bs-toggle="dropdown" aria-haspopup="true"
+                                                    aria-expanded="false">Percent</button>
+                                            </div>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="#">Percent</a>
+                                                <a class="dropdown-item" href="#">Full Value</a>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="row">
+                                        <div class="col">
+                                            <label for="loanRate" class="form-label">Rate</label>
+                                            <input type="number" class="form-control" id="loanRate">
+                                            <button type="button" class="btn btn-primary mt-2 float-end"
+                                                id="btnCalculate">Calculate</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+
+                        <div class="col-8 border-start">
+                            <div class="row ">
+                                <div class="col-4 border-end border-2 text-center">
+                                    <h4>Short Term Loan</h4>
+                                    <div class="row">
+                                        <div class="col">
+                                            <h5>Loan Amount</h5>
+                                            <p><strong>$0.00</strong></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <h5>Interest Rate</h5>
+                                            <p><strong>10.3%</strong></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <h5>Loan Term</h5>
+                                            <p><strong>24 Months</strong></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <h5>Total Cost</h5>
+                                            <p><strong>$0.00</strong></p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <button class="btn btn-primary" id="choose1">Choose</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                            <div class="col-4 text-center border-end border-2">
+                                <h4>Your Loan</h4>
+                                <div class="row">
+                                    <div class="col">
+                                        <h5>Loan Amount</h5>
+                                        <p><strong>$0.00</strong></p>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <h5>Interest Rate</h5>
+                                        <p><strong>10.3%</strong></p>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <h5>Loan Term</h5>
+                                        <p><strong>30 Months</strong></p>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <h5>Total Cost</h5>
+                                        <p><strong>$0.00</strong></p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <button class="btn btn-primary" id="choose2">Choose</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4 text-center">
+                                <h4>Long Term Loan</h4>
+                                <div class="row">
+                                    <div class="col">
+                                        <h5>Loan Amount</h5>
+                                        <p><strong>$0.00</strong></p>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <h5>Interest Rate</h5>
+                                        <p><strong>3.5</strong></p>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <h5>Loan Term</h5>
+                                        <p><strong>84 Months</strong></p>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <h5>Total Cost</h5>
+                                        <p><strong>$0.00</strong></p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <button class="btn btn-primary" id="choose3">Choose</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="modal-footer">
+            <button class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal"
+                data-bs-dismiss="modal">Back to first</button>
+        </div> -->
+    </div>
+    </div>
+    </div>
+    <a class="btn btn-primary visually-hidden" id="btnModal" data-bs-toggle="modal" href="#exampleModalToggle"
+        role="button">Open first modal</a>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+        integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+        integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous">
+    </script>
+    <script src="/js/site.js"></script>
+    <script>
+        window.onload = displayUserModal;
+        document.getElementById('btnShow').addEventListener('click', displayAmSchedule);
+        document.getElementById('changeUser').addEventListener('click', displayUserModal);
+        document.getElementById('btnCalculate').addEventListener('click', displayOptions);
+        document.getElementById('changeUser').addEventListener('click', displayUserModal);
+        document.getElementById('choose1').addEventListener('click', function() {
+            setUserData(shortTermLoan);
+        });
+        document.getElementById('choose2').addEventListener('click', function() {
+            setUserData(userTermLoan);
+        });
+        document.getElementById('choose1').addEventListener('click', function() {
+            setUserData(longTermLoan);
+        });
+    </script>
+</body>
+
+</html>
