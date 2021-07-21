@@ -887,7 +887,7 @@ let shortTermLoan = {
     moneyDown: 0,
     monthlyPayment: 0,
     totalInterest: 0,
-    totalCost: 0.00,
+    totalCost: 0,
     amSchedule: []
 };
 let userTermLoan = {
@@ -1001,8 +1001,11 @@ function displayUserModal() {
 
 function displayUser(number) {
     let modalCloseBtn = document.getElementById('btnClose1');
+    let amTable = document.getElementById('resultTable');
+    amTable.innerHTML = '';
     userNumber = number - 1;
     modalCloseBtn.click();
+
     displaySummary();
 
 }
@@ -1062,6 +1065,8 @@ function setUserData(data) {
 
 }
 
+
+// validate numbers
 function validate(input) {
     // validate inputs
     if (isNaN(input)) {
@@ -1076,6 +1081,14 @@ function validate(input) {
     }
 
 }
+// add validation for names
+
+
+function makePayment(){
+    // get user payment
+    // update current balance
+    // change style of table row for month payed.
+}
 
 function payOffLoan() {
     // get localStorage
@@ -1085,25 +1098,26 @@ function payOffLoan() {
 
 }
 
-function generateAmSchedule() {
-    let testArray = [];
-    monthlyPayment = calcMonthlyPayment(loanBalance, loanRate, loanTerm);
+function generateAmSchedule(loan) {
+    let amSchedule = [];
+    let interest = 0;
 
-    for (let i = 1; i <= users[0].term; i++) {
-        interest = calcInterest(loanBalance, loanRate);
-        results = ''
-        loanBalance -= monthlyPayment - interest;
-        totalInterest += interest;
-        testArray.push({
+    let monthlyPayment = calcMonthlyPayment(loan.currentBalance, loan.rate, loan.term);
+
+    for (let i = 1; i <= users[userNumber].term; i++) {
+        interest = calcInterest(loan.currentBalance, loan.rate);
+        loan.currentBalance -= monthlyPayment - interest;
+        loan.totalInterest += interest;
+        amSchedule.push({
             payment: formatNumber(monthlyPayment),
             principal: formatNumber(monthlyPayment - interest),
             interest: formatNumber(interest),
-            totalInterest: formatNumber(totalInterest),
-            balance: formatNumber(Math.abs(loanBalance))
+            totalInterest: formatNumber(loan.totalInterest),
+            balance: formatNumber(Math.abs(loan.currentBalance))
         })
 
     }
-    return testArray;
+    return amSchedule;
 
 
 }
