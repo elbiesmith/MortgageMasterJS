@@ -922,6 +922,17 @@ let longTermLoan = {
 };
 
 
+function getLongTermLoan() {
+    return longTermLoan;
+}
+function getUserTermLoan() {
+    return userTermLoan;
+}
+function getShortTermLoan() {
+    return shortTermLoan;
+}
+
+
 // payment Calculation (amount * (rate / 1200)) / (1 - Math.pow(1 + rate / 1200, -term));
 // interest Calculation balance * (rate / 1200);
 
@@ -934,13 +945,6 @@ function calcInterest(loanBalance, loanRate) {
     return (loanBalance * (loanRate / 1200));
 }
 
-function formatNumber(number) {
-    let myCurrency = {
-        currency: "USD",
-        style: "currency"
-    };
-    return number.toLocaleString('en-US', myCurrency);
-}
 
 function displayAmSchedule() {
     let results = '';
@@ -975,16 +979,16 @@ function displaySummary() {
     userName.innerHTML = `${users[userNumber].lastName}, ${users[userNumber].firstName}`
 
     paymentsMade.innerHTML = users[userNumber].paymentsMade;
-    currentBalance.innerHTML = users[userNumber].currentBalance;
-    totalPrincipal.innerHTML = users[userNumber].principal;
+    currentBalance.innerHTML = formatNumber(users[userNumber].currentBalance);
+    totalPrincipal.innerHTML = formatNumber(users[userNumber].principal);
     interestRate.innerHTML = users[userNumber].rate;
     termLength.innerHTML = users[userNumber].term;
-    downPayment.innerHTML = users[userNumber].moneyDown;
+    downPayment.innerHTML = formatNumber(users[userNumber].moneyDown);
 
-    totalPrincipalCard.innerHTML = users[userNumber].principal;
-    totalInterestCard.innerHTML = users[userNumber].totalInterest;
-    totalCostCard.innerHTML = users[userNumber].totalCost;
-    paymentCard.innerHTML = users[userNumber].monthlyPayment;
+    totalPrincipalCard.innerHTML = formatNumber(users[userNumber].principal);
+    totalInterestCard.innerHTML = formatNumber(users[userNumber].totalInterest);
+    totalCostCard.innerHTML = formatNumber(users[userNumber].totalCost);
+    paymentCard.innerHTML = formatNumber(users[userNumber].monthlyPayment);
 }
 
 function displayUserModal() {
@@ -1016,7 +1020,7 @@ function calculate() {
     let lastName = document.getElementById('lastNameForm').value;
     let loanAmount = validate(parseInt(document.getElementById('loanAmount').value));
     let loanTerm = validate(parseInt(document.getElementById('loanTerm').value));
-    let downPayment = validate(parseInt(document.getElementById('downPaymentForm').value));
+    let downPayment = validate(parseInt(document.getElementById('downPaymentForm').value)) || 0;
     let loanRate = validate(parseFloat(document.getElementById('loanRate').value));
 
     // build longTermLoan, shortTermLoan, userTermLoan
@@ -1066,6 +1070,13 @@ function setUserData(data) {
 
 }
 
+function formatNumber(number) {
+    let myCurrency = {
+        currency: "USD",
+        style: "currency"
+    };
+    return number.toLocaleString('en-US', myCurrency);
+}
 
 // validate numbers
 function validate(input) {
@@ -1104,13 +1115,12 @@ function generateAmSchedule(loan) {
     let interest = 0;
 
     let monthlyPayment = calcMonthlyPayment(loan.currentBalance, loan.rate, loan.term);
-    totalCost = 0;
+    totalCost = loan.term * monthlyPayment;
     totalInterest = 0
     for (let i = 1; i <= loan.term; i++) {
         interest = calcInterest(loan.currentBalance, loan.rate);
         loan.currentBalance -= monthlyPayment - interest;
         totalInterest += interest;
-        totalCost += monthlyPayment;
         loan.totalInterest += interest;
         amSchedule.push({
             payment: formatNumber(monthlyPayment),
@@ -1136,9 +1146,10 @@ function buildLongTerm(first, last, amount, term, downPayment, rate) {
     longTermLoan.term = 84;
     longTermLoan.rate = 3.5;
     longTermLoan.monthlyPayment = calcMonthlyPayment(longTermLoan.principal, longTermLoan.rate, longTermLoan.term);
-    longTermLoan.amSchedule = generateAmSchedule(longTermLoan);
     longTermLoan.currentBalance = longTermLoan.principal - (longTermLoan.monthlyPayment * longTermLoan.paymentsMade);
-    longTermLoan.totalCost = totalCost;
+
+    longTermLoan.amSchedule = generateAmSchedule(longTermLoan);
+    longTermLoan.totalCost = 84 * calcMonthlyPayment(longTermLoan.principal, longTermLoan.rate, longTermLoan.term);
     longTermLoan.totalInterest = totalInterest;
 
     // longTermLoan.totalInterest = totalInterest;
@@ -1157,7 +1168,7 @@ function buildUserTerm(first, last, amount, term, downPayment, rate) {
     userTermLoan.monthlyPayment = calcMonthlyPayment(userTermLoan.principal, userTermLoan.rate, userTermLoan.term);
     userTermLoan.amSchedule = generateAmSchedule(userTermLoan);
     userTermLoan.currentBalance = userTermLoan.principal - (userTermLoan.monthlyPayment * userTermLoan.paymentsMade);
-    userTermLoan.totalCost = totalCost;
+    userTermLoan.totalCost = term * calcMonthlyPayment(userTermLoan.principal, userTermLoan.rate, userTermLoan.term);
     userTermLoan.totalInterest = totalInterest;
     // userTermLoan.totalInterest = totalInterest;
     // userTermLoan.totalCost = totalCost;
@@ -1175,9 +1186,22 @@ function buildShortTerm(first, last, amount, term, downPayment, rate) {
     shortTermLoan.monthlyPayment = calcMonthlyPayment(shortTermLoan.principal, shortTermLoan.rate, shortTermLoan.term);
     shortTermLoan.amSchedule = generateAmSchedule(shortTermLoan);
     shortTermLoan.currentBalance = shortTermLoan.principal - (shortTermLoan.monthlyPayment * shortTermLoan.paymentsMade);
-    shortTermLoan.totalCost = totalCost;
+    shortTermLoan.totalCost = 24 * calcMonthlyPayment(shortTermLoan.principal, shortTermLoan.rate, shortTermLoan.term);
     shortTermLoan.totalInterest = totalInterest;
 
     // shortTermLoan.totalInterest = totalInterest;
     // shortTermLoan.totalCost = totalCost;
+}
+
+function choose1(){
+    users.push(shortTermLoan);
+    setUserData(users);
+}
+function choose2(){
+    users.push(userTermLoan);
+    setUserData(users);
+}
+function choose3(){
+    users.push(longTermLoan);
+    setUserData(users);
 }
